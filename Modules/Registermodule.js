@@ -28,6 +28,7 @@ module.exports.loginuser=async(req,res)=>{
     const issamepass=await bcrypt.compare(req.body.user.password,userexist.password)
     if(!issamepass){return res.status(400).send("Incorrect password")}
     else{res.send('Password verified')}
+    
 }
 
 module.exports.udpateuser=async(req,res)=>{
