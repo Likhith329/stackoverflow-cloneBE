@@ -1,21 +1,14 @@
 const cors=require('cors')
 var logger = require('morgan');
 const express=require('express')
-//json web token
 const jwt=require('jsonwebtoken')
 const mongo=require('./connect')
 const Registerrouter=require('./Router/Registerrouter')
 const Questionsrouter=require('./Router/Questionsrouter')
 const dotenv=require('dotenv')
-//nodemailer
 const nodemailer=require('nodemailer')
+
 dotenv.config()
-
-
-
-
-
-//express server
 
 const app=express()
 
@@ -23,7 +16,6 @@ const app=express()
 app.use(express.json())
 
 //cross origin resource sharing(cors)
-
 app.use(cors())
 
 app.use(logger('dev'));
@@ -31,13 +23,9 @@ app.use(logger('dev'));
 //mongodb connection
 mongo.connect()
 
-
 app.use('/users',Registerrouter)
 app.use('/questions',Questionsrouter)
 app.use('/companies',Questionsrouter)
-
-
-
 
 //email function
 function sendEmail(email,link){
@@ -66,8 +54,6 @@ function sendEmail(email,link){
         })
     })
 }
-
-
 
 //secret key or privatekey
 const privatekey=process.env.PRIVATE_KEY
