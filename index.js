@@ -61,7 +61,7 @@ const privatekey=process.env.PRIVATE_KEY
 app.post('/forgotpassword',async(req,res)=>{
 
     //token creation 
-    const token=jwt.sign(req.body.user,privatekey,{expiresIn:'60s'})
+    const token=jwt.sign(req.body.user,privatekey,{expiresIn:'120s'})
      //updating the token to database
      await mongo.selectedDb.collection('Users').updateOne({email:req.body.user.email},{$set:{token:token}})
     //creating and sending the link through email
