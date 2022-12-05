@@ -11,8 +11,8 @@ module.exports.getuser=async(req,res)=>{
 }
 
 module.exports.createuser=async(req,res)=>{
-    //const randomstring=await bcrypt.genSalt(10)
-    //req.body.user.password=await bcrypt.hash(req.body.user.password,randomstring)
+    const randomstring=await bcrypt.genSalt(10)
+    req.body.user.password=await bcrypt.hash(req.body.user.password,randomstring)
     req.body.user.confirmpassword=''
     try {
         const createdresponse=await mongo.selectedDb.collection('Users').insertOne({...req.body.user})
