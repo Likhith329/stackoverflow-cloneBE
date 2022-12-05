@@ -28,17 +28,8 @@ app.use(cors())
 
 app.use(logger('dev'));
 
-
-
-
 //mongodb connection
-
 mongo.connect()
-
-
-
-
-
 
 
 app.use('/users',Registerrouter)
