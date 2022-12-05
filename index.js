@@ -1,40 +1,52 @@
+const cors=require('cors')
+var logger = require('morgan');
+const express=require('express')
+//json web token
+const jwt=require('jsonwebtoken')
+const mongo=require('./connect')
+const Registerrouter=require('./Router/Registerrouter')
+const Questionsrouter=require('./Router/Questionsrouter')
 const dotenv=require('dotenv')
+//nodemailer
+const nodemailer=require('nodemailer')
 dotenv.config()
 
 
 
-//json web token
-const jwt=require('jsonwebtoken')
+
 
 //express server
-const express=require('express')
+
 const app=express()
 
 //buit-in middleware
 app.use(express.json())
 
 //cross origin resource sharing(cors)
-const cors=require('cors')
+
 app.use(cors())
 
+app.use(logger('dev'));
+
+
+
+
 //mongodb connection
-const mongo=require('./connect')
+
 mongo.connect()
 
 
 
 
-app.use(express.json())
 
-const Registerrouter=require('./Router/Registerrouter')
-const Questionsrouter=require('./Router/Questionsrouter')
+
+
 app.use('/users',Registerrouter)
 app.use('/questions',Questionsrouter)
 app.use('/companies',Questionsrouter)
 
 
-//nodemailer
-const nodemailer=require('nodemailer')
+
 
 //email function
 function sendEmail(email,link){
