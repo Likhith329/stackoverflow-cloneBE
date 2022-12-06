@@ -11,6 +11,8 @@ module.exports.getuser=async(req,res)=>{
 }
 
 module.exports.createuser=async(req,res)=>{
+    const userexist=await mongo.selectedDb.collection('Users').findOne({email:req.body.user.email})
+    if(!userexist){ return res.send("email already exist!")}
     const randomstring=await bcrypt.genSalt(10)
     req.body.user.password=await bcrypt.hash(req.body.user.password,randomstring)
     req.body.user.confirmpassword=''
