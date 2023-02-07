@@ -1,5 +1,6 @@
 const mongo=require('../connect')
 const bcrypt=require("bcrypt")
+const jwt=require('jsonwebtoken')
 
 module.exports.getuser=async(req,res)=>{
     try {
@@ -24,10 +25,18 @@ module.exports.createuser=async(req,res)=>{
 
 module.exports.loginuser=async(req,res)=>{
 
-    const userexist=await mongo.selectedDb.collection('Users').findOne({email:req.body.user.email})
-    const issamepass=await bcrypt.compare(req.body.user.password,userexist.password)
-    if(!issamepass){return res.status(400).send("Incorrect password")}
-    else{res.send('Password verified')}
+    try {
+        const userexist=await mongo.selectedDb.collection('Users').findOne({email:req.body.user.email})
+        if(userexist){
+            const id=userexist._id
+            const token =jwt.sign({id},process.env.PRIVATE_KEY,{expiresIn:'30d'})
+            const issamepass=await bcrypt.compare(req.body.user.password,userexist.password)
+            if(!issamepass){return res.status(400).send("Incorrect password")}
+            else{res.send({token})}
+        }
+    } catch (error) {
+        console.log(error)
+    }
     
 }
 

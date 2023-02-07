@@ -5,6 +5,7 @@ const jwt=require('jsonwebtoken')
 const mongo=require('./connect')
 const Registerrouter=require('./Router/Registerrouter')
 const Questionsrouter=require('./Router/Questionsrouter')
+const Authmodule=require('./Modules/Authmodule')
 const dotenv=require('dotenv')
 const nodemailer=require('nodemailer')
 
@@ -24,8 +25,7 @@ app.use(logger('dev'));
 mongo.connect()
 
 app.use('/users',Registerrouter)
-app.use('/questions',Questionsrouter)
-app.use('/companies',Questionsrouter)
+
 
 //email function
 function sendEmail(email,link){
@@ -65,7 +65,7 @@ app.post('/forgotpassword',async(req,res)=>{
      //updating the token to database
      await mongo.selectedDb.collection('Users').updateOne({email:req.body.user.email},{$set:{token:token}})
     //creating and sending the link through email
-    const link=`https://stackoverflow-clonefe.netlify.app/resetpassword/${req.body.user.email}/${token}`
+    const link=`http://localhost:3000/resetpassword/${req.body.user.email}/${token}`
     sendEmail(req.body.user.email,link).then(resp=> res.send(resp)).catch(error=>res.send(error))
  
 })
@@ -82,6 +82,10 @@ app.post('/resetpassword',async(req,res)=>{
         res.status(400).send('token expired!!')
     }
 })
+
+app.use('/',Authmodule.authenticate)
+app.use('/questions',Questionsrouter)
+app.use('/companies',Questionsrouter)
 
 //listening to server
 app.listen(process.env.PORT)
